@@ -95,12 +95,46 @@
   .alert{padding:10px;border-radius:6px;margin:8px 0;font-size:13px}
   .alert.error{background:#fef2f2;border:1px solid #fecaca;color:#991b1b}
   .alert.warn{background:#fffbeb;border:1px solid #fde68a;color:#92400e}
+  /* jerarquía de filas en tablas */
+  .indent-1{padding-left:22px !important}
+  .indent-2{padding-left:42px !important}
+  tr.row-l1{background:#eef2ff;font-weight:700}
+  tr.row-l2{background:#f8fafc;font-weight:600}
+  tr.row-l1 td,tr.row-l2 td{border-bottom-color:var(--accent)}
+  .tree-tick{color:var(--muted);font-weight:400;margin-right:4px}
+  /* Lock overlay */
+  #_lk{position:fixed;inset:0;background:#0f172a;z-index:9999;display:flex;align-items:center;justify-content:center;padding:20px}
+  #_lk.hidden{display:none}
+  #_lk ._b{background:#fff;border-radius:14px;padding:32px 24px;max-width:340px;width:100%;text-align:center;box-shadow:0 20px 50px rgba(0,0,0,.3)}
+  #_lk h3{margin:0 0 4px;font-size:18px;color:#0f172a}
+  #_lk p{margin:0 0 22px;color:#6b7280;font-size:13px}
+  #_lk ._d{display:flex;justify-content:center;gap:8px;margin-bottom:20px}
+  #_lk ._d ._dot{width:14px;height:14px;border-radius:50%;border:2px solid #cbd5e1;transition:.15s}
+  #_lk ._d ._dot.f{background:#1e3a8a;border-color:#1e3a8a}
+  #_lk._w ._d ._dot{border-color:#dc2626;animation:_sh .35s}
+  @keyframes _sh{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+  #_lk ._k{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+  #_lk ._k button{background:#f1f5f9;color:#0f172a;border:0;border-radius:10px;padding:14px 0;font:600 18px/1 system-ui,-apple-system,sans-serif;cursor:pointer;min-height:54px;transition:.1s}
+  #_lk ._k button:hover{background:#e2e8f0}
+  #_lk ._k button:active{transform:scale(.96)}
+  #_lk ._k ._z{background:transparent;color:#6b7280;font-size:14px}
   @media print{body{background:#fff}header,.no-print{display:none !important}main{display:block;padding:0;max-width:none}.card{border:none;padding:0;break-inside:avoid}}
 </style>
 </head>
 <body>
+<div id="_lk"><div class="_b">
+  <h3>Acceso restringido</h3>
+  <p>Ingresa el código para continuar</p>
+  <div class="_d"><div class="_dot"></div><div class="_dot"></div><div class="_dot"></div><div class="_dot"></div></div>
+  <div class="_k">
+    <button data-k="1">1</button><button data-k="2">2</button><button data-k="3">3</button>
+    <button data-k="4">4</button><button data-k="5">5</button><button data-k="6">6</button>
+    <button data-k="7">7</button><button data-k="8">8</button><button data-k="9">9</button>
+    <button class="_z" data-k="c">borrar</button><button data-k="0">0</button><button class="_z" data-k="e">↵</button>
+  </div>
+</div></div>
 <header>
-  <h1>Cotizador Identilabel <small>v0.6</small></h1>
+  <h1>Cotizador Identilabel <small>v0.7</small></h1>
   <small id="status">— sin guardar</small>
 </header>
 
@@ -368,13 +402,13 @@
       <div class="kpi"><div class="label">Score · USD/hr-máq</div><div class="val" id="r_score">—</div><div class="sub" id="r_score_sub">—</div></div>
     </div>
 
-    <h3 style="font-size:13px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin:14px 0 4px">Desglose de costos</h3>
+    <h3 style="font-size:13px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin:14px 0 4px">Desglose de costos (jerárquico)</h3>
     <div id="donut-costos"></div>
-    <div class="table-wrap"><table style="margin-top:10px"><thead><tr><th>Concepto</th><th class="num">Detalle</th><th class="num">USD/millar</th><th class="num">% costo</th></tr></thead><tbody id="r_desglose"></tbody></table></div>
+    <div class="table-wrap"><table style="margin-top:10px"><thead><tr><th>Concepto</th><th class="num">Detalle</th><th class="num">USD/millar</th><th class="num">% padre</th><th class="num">% costo</th></tr></thead><tbody id="r_desglose"></tbody></table></div>
 
-    <h3 style="font-size:13px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin:14px 0 4px">Tiempos detallados</h3>
+    <h3 style="font-size:13px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin:14px 0 4px">Tiempos detallados (jerárquicos)</h3>
     <div id="donut-tiempos"></div>
-    <div class="table-wrap"><table style="margin-top:10px"><thead><tr><th>Etapa</th><th class="num">Minutos</th><th class="num">% del total</th></tr></thead><tbody id="r_tiempos"></tbody></table></div>
+    <div class="table-wrap"><table style="margin-top:10px"><thead><tr><th>Etapa</th><th class="num">Minutos</th><th class="num">% padre</th><th class="num">% total</th></tr></thead><tbody id="r_tiempos"></tbody></table></div>
 
     <h3 style="font-size:13px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin:14px 0 4px">Geometría y scrap</h3>
     <div id="donut-geom"></div>
@@ -903,59 +937,122 @@ function renderResultados(I,R){
   $("r_score").innerHTML = `<span class="${clase}">${fmtUsd(s)}</span>`;
   $("r_score_sub").innerHTML = `${icono} ${texto} · máq ${I.maquina}${I.frecuencia>1?` · anual ${fmtUsd(R.utilidad_total*I.frecuencia)}`:""}`;
 
-  const conceptos = [
-    ["Material", `${fmtN0(R.total_m2)} m²`, R.material_millar],
-    ["Producción", `${fmtN0(R.tiempo_total_min)} min`, R.costo_prod_millar],
-    ["Tintas", I.tieneTintas?`${I.tintas.length}t`:"—", R.tinta_millar],
-    ["Suaje", `${fmtN0(R.m_totales/1000)}k m`, R.suaje_millar],
-    ["Pleca", I.lleva_pleca?"sí":"no", R.pleca_millar],
-    ["Placas (prorrateo 20k m)", `${I.numTintas}c · ${(R.m_totales/STD.vida_placa).toFixed(2)} sets`, R.placa_millar],
-    ["Envío", `${R.cajas}cj × USD ${I.costo_envio_caja}`, R.envio_millar],
-    ["Empaque", "", R.empaque_millar],
-    ["Laminado", I.laminado, R.laminado_millar]
-  ];
+  // Producción dividida en prensa + rebo (volumen de millares ya está en R.volumen)
+  const prensa_x_millar = R.costo_prensa_total ? R.costo_prensa_total / I.volumen : 0;
+  const rebo_x_millar = R.costo_rebo_total ? R.costo_rebo_total / I.volumen : 0;
   const tbody = $("r_desglose"); tbody.innerHTML="";
-  conceptos.forEach(([n,d,v],i)=>{
-    const tr=document.createElement("tr");
-    tr.innerHTML = `<td><span class="swatch" style="background:${COLORES[i]}"></span>${n}</td><td class="num" style="color:var(--muted)">${d}</td><td class="num">${fmtUsd(v)}</td><td class="num">${fmtPct(v/R.costo_total)}</td>`;
+
+  const addCRow = (label, detalle, val, parent, total, lvl, color, cls) => {
+    const tr = document.createElement("tr");
+    if(cls) tr.className = cls;
+    const sw = color ? `<span class="swatch" style="background:${color}"></span>` : "";
+    const tick = lvl===2 ? `<span class="tree-tick">└</span>` : (lvl===1 ? `<span class="tree-tick">├</span>` : "");
+    const indent = lvl===1 ? "indent-1" : (lvl===2 ? "indent-2" : "");
+    const pctP = parent>0 ? ((val/parent)*100).toFixed(1)+"%" : "—";
+    const pctT = total>0 ? ((val/total)*100).toFixed(1)+"%" : "—";
+    tr.innerHTML = `<td class="${indent}">${tick}${sw}${label}</td><td class="num" style="color:var(--muted)">${detalle}</td><td class="num">${fmtUsd(val)}</td><td class="num">${pctP}</td><td class="num">${pctT}</td>`;
     tbody.appendChild(tr);
-  });
-  const trT=document.createElement("tr"); trT.className="total"; trT.innerHTML=`<td>Subtotal</td><td></td><td class="num">${fmtUsd(R.costo_total)}</td><td class="num">100%</td>`; tbody.appendChild(trT);
-  const trF=document.createElement("tr"); trF.innerHTML=`<td>Financ. (${I.fin_dias}d @ 10%)</td><td></td><td class="num">${fmtUsd(R.financ)}</td><td></td>`; tbody.appendChild(trF);
-  const trC=document.createElement("tr"); trC.className="total"; trC.innerHTML=`<td>Costo final fab.</td><td></td><td class="num">${fmtUsd(R.costo_final)}</td><td></td>`; tbody.appendChild(trC);
-  const trU=document.createElement("tr"); trU.innerHTML=`<td>Utilidad ${(I.utilidad*100).toFixed(1)}%</td><td></td><td class="num">${fmtUsd(R.utilidad_usd)}</td><td></td>`; tbody.appendChild(trU);
+  };
+
+  const tot = R.costo_total;
+  // Material
+  addCRow("Material", `${fmtN0(R.total_m2)} m²`, R.material_millar, tot, tot, 0, COLORES[0]);
+  // Producción (padre) → prensa + rebo
+  addCRow("Producción (prensa + rebo)", `${fmtN0(R.tiempo_total_min)} min`, R.costo_prod_millar, tot, tot, 0, null, "row-l2");
+  if(prensa_x_millar > 0) addCRow("Prensa", `${fmtN0(R.prensa_min)} min · USD 38.85/hr`, prensa_x_millar, R.costo_prod_millar, tot, 1, COLORES[1]);
+  addCRow("Rebobinado + empaque", `${fmtN0(R.sumatoria_rebo + R.empaque_min)} min · USD 22.27/hr`, rebo_x_millar, R.costo_prod_millar, tot, 1, COLORES[2]);
+  // Resto
+  addCRow("Tintas", I.tieneTintas?`${I.tintas.length} tinta(s)`:"—", R.tinta_millar, tot, tot, 0, COLORES[3]);
+  addCRow("Suaje", `${fmtN0(R.m_totales/1000)}k m corridos`, R.suaje_millar, tot, tot, 0, COLORES[4]);
+  addCRow("Pleca", I.lleva_pleca?"sí":"no", R.pleca_millar, tot, tot, 0, COLORES[5]);
+  addCRow("Placas (prorrateo 20k m)", `${I.numTintas}c · ${(R.m_totales/STD.vida_placa).toFixed(2)} sets`, R.placa_millar, tot, tot, 0, COLORES[6]);
+  addCRow("Envío", `${R.cajas}cj × MXN ${I.costo_envio_caja}`, R.envio_millar, tot, tot, 0, COLORES[7]);
+  addCRow("Empaque (centros+cajas+bolsa)", "", R.empaque_millar, tot, tot, 0, COLORES[8]);
+  addCRow("Laminado", I.laminado, R.laminado_millar, tot, tot, 0, COLORES[0]);
+
+  // Subtotales
+  const trT=document.createElement("tr"); trT.className="total"; trT.innerHTML=`<td>Subtotal costo</td><td></td><td class="num">${fmtUsd(R.costo_total)}</td><td class="num">—</td><td class="num">100%</td>`; tbody.appendChild(trT);
+  const trF=document.createElement("tr"); trF.innerHTML=`<td>Financ. (${I.fin_dias}d @ 10%)</td><td></td><td class="num">${fmtUsd(R.financ)}</td><td class="num">—</td><td></td>`; tbody.appendChild(trF);
+  const trC=document.createElement("tr"); trC.className="total"; trC.innerHTML=`<td>Costo final fab.</td><td></td><td class="num">${fmtUsd(R.costo_final)}</td><td class="num">—</td><td></td>`; tbody.appendChild(trC);
+  const trU=document.createElement("tr"); trU.innerHTML=`<td>Utilidad ${(I.utilidad*100).toFixed(1)}%</td><td></td><td class="num">${fmtUsd(R.utilidad_usd)}</td><td class="num">—</td><td></td>`; tbody.appendChild(trU);
   if(R.desc_aplicado_usd > 0){
-    const trD=document.createElement("tr"); trD.innerHTML=`<td>Descuento compromiso ${(I.desc_compromiso*100).toFixed(1)}% (${I.compromiso})</td><td></td><td class="num bad">−${fmtUsd(R.desc_aplicado_usd)}</td><td></td>`; tbody.appendChild(trD);
+    const trD=document.createElement("tr"); trD.innerHTML=`<td>Descuento compromiso ${(I.desc_compromiso*100).toFixed(1)}% (${I.compromiso})</td><td></td><td class="num bad">−${fmtUsd(R.desc_aplicado_usd)}</td><td class="num">—</td><td></td>`; tbody.appendChild(trD);
   }
-  const trFinal=document.createElement("tr"); trFinal.className="final"; trFinal.innerHTML=`<td>PRECIO SUGERIDO</td><td></td><td class="num">${fmtUsd(R.precio_usd)} /millar</td><td class="num">${fmtMx(R.precio_mxn)}</td>`; tbody.appendChild(trFinal);
+  const trFinal=document.createElement("tr"); trFinal.className="final"; trFinal.innerHTML=`<td>PRECIO SUGERIDO</td><td></td><td class="num">${fmtUsd(R.precio_usd)} /millar</td><td class="num">—</td><td class="num">${fmtMx(R.precio_mxn)}</td>`; tbody.appendChild(trFinal);
   if(I.cobrar_placa_aparte && R.placa_set_usd > 0){
-    const trP=document.createElement("tr"); trP.innerHTML=`<td colspan="2" style="font-style:italic">+ Cargo único set de placas (no incluido en precio/millar)</td><td class="num">${fmtUsd(R.placa_set_usd)}</td><td class="num">${fmtMx(R.placa_set_usd*I.tc)}</td>`; tbody.appendChild(trP);
+    const trP=document.createElement("tr"); trP.innerHTML=`<td colspan="2" style="font-style:italic">+ Cargo único set de placas (no incluido en precio/millar)</td><td class="num">${fmtUsd(R.placa_set_usd)}</td><td class="num">—</td><td class="num">${fmtMx(R.placa_set_usd*I.tc)}</td>`; tbody.appendChild(trP);
   }
   const placaPct = R.placa_millar / R.costo_total;
   $("placa-warning").style.display = (I.frecuencia===1 && !I.cobrar_placa_aparte && placaPct > 0.15) ? "block" : "none";
 
-  renderDonut("donut-costos", conceptos.map(([n,_,v],i)=>({label:n, value:v, color:COLORES[i]})));
+  // Donut: solo hojas (sin Producción agregada para evitar doble conteo)
+  renderDonut("donut-costos", [
+    {label:"Material", value:R.material_millar, color:COLORES[0]},
+    {label:"Prensa", value:prensa_x_millar, color:COLORES[1]},
+    {label:"Rebo+empaque", value:rebo_x_millar, color:COLORES[2]},
+    {label:"Tintas", value:R.tinta_millar, color:COLORES[3]},
+    {label:"Suaje", value:R.suaje_millar, color:COLORES[4]},
+    {label:"Pleca", value:R.pleca_millar, color:COLORES[5]},
+    {label:"Placas", value:R.placa_millar, color:COLORES[6]},
+    {label:"Envío", value:R.envio_millar, color:COLORES[7]},
+    {label:"Empaque", value:R.empaque_millar, color:COLORES[8]},
+    {label:"Laminado", value:R.laminado_millar, color:COLORES[0]}
+  ]);
 
-  // Tiempos con %
+  // Tiempos jerárquicos: Total → Prensa total/Rebo total/Empaque → hijos
   const tt=$("r_tiempos"); tt.innerHTML="";
-  const tRows = [
-    ["Prensa ajuste", R.prensa_bd.ajuste||0, COLORES[0]],
-    ["Prensa cruces", R.prensa_bd.cruces||0, COLORES[1]],
-    ["Prensa producción", R.prensa_bd.produccion||0, COLORES[2]],
-    ["Prensa limpieza", R.prensa_bd.limpieza||0, COLORES[3]],
-    ["Rebo ajuste", R.rebo_bd.ajuste, COLORES[4]],
-    ["Rebo cruces", R.rebo_bd.cruces, COLORES[5]],
-    ["Rebo producción", R.rebo_bd.produccion, COLORES[6]],
-    ["Rebo limpieza", R.rebo_bd.limpieza, COLORES[7]],
-    ["Empaque", R.rebo_bd.empaque, COLORES[8]]
-  ];
   const totalT = R.tiempo_total_min || 1;
-  tRows.forEach(([k,v,c])=>{
-    const tr=document.createElement("tr");
-    tr.innerHTML = `<td><span class="swatch" style="background:${c}"></span>${k}</td><td class="num">${(v||0).toFixed(1)} min</td><td class="num">${((v||0)/totalT*100).toFixed(1)}%</td>`;
+  const prensaTot = R.prensa_min || 0;
+  const reboTot = R.sumatoria_rebo || 0;
+  const empaqueTot = R.empaque_min || 0;
+  const pBd = R.prensa_bd || {}, rBd = R.rebo_bd || {};
+
+  const addRow = (label, val, parent, total, lvl, color, cls) => {
+    const tr = document.createElement("tr");
+    if(cls) tr.className = cls;
+    const sw = color ? `<span class="swatch" style="background:${color}"></span>` : "";
+    const tick = lvl===2 ? `<span class="tree-tick">└</span>` : (lvl===1 ? `<span class="tree-tick">├</span>` : "");
+    const indent = lvl===1 ? "indent-1" : (lvl===2 ? "indent-2" : "");
+    const pctPadre = parent>0 ? ((val/parent)*100).toFixed(1)+"%" : "—";
+    const pctTotal = total>0 ? ((val/total)*100).toFixed(1)+"%" : "—";
+    tr.innerHTML = `<td class="${indent}">${tick}${sw}${label}</td><td class="num">${(val||0).toFixed(1)} min</td><td class="num">${pctPadre}</td><td class="num">${pctTotal}</td>`;
     tt.appendChild(tr);
-  });
-  const trTot=document.createElement("tr"); trTot.className="total"; trTot.innerHTML=`<td>TOTAL</td><td class="num">${fmtN0(R.tiempo_total_min)} min</td><td class="num">100%</td>`; tt.appendChild(trTot);
+  };
+
+  // Nivel 0: TOTAL
+  addRow("⏱ TIEMPO TOTAL PRODUCCIÓN", totalT, totalT, totalT, 0, null, "row-l1");
+
+  // Nivel 1: Prensa total
+  if(prensaTot > 0){
+    addRow("Tiempo total PRENSA", prensaTot, totalT, totalT, 1, null, "row-l2");
+    addRow("Vestido / ajuste", pBd.ajuste||0, prensaTot, totalT, 2, COLORES[0]);
+    addRow("Cruces de bobina", pBd.cruces||0, prensaTot, totalT, 2, COLORES[1]);
+    addRow("Producción", pBd.produccion||0, prensaTot, totalT, 2, COLORES[2]);
+    addRow("Limpieza", pBd.limpieza||0, prensaTot, totalT, 2, COLORES[3]);
+  }
+
+  // Nivel 1: Rebo total
+  addRow("Tiempo total REBO", reboTot, totalT, totalT, 1, null, "row-l2");
+  addRow("Vestido / ajuste", rBd.ajuste||0, reboTot, totalT, 2, COLORES[4]);
+  addRow("Cruces de bobina", rBd.cruces||0, reboTot, totalT, 2, COLORES[5]);
+  addRow("Producción", rBd.produccion||0, reboTot, totalT, 2, COLORES[6]);
+  addRow("Limpieza", rBd.limpieza||0, reboTot, totalT, 2, COLORES[7]);
+
+  // Nivel 1: Empaque
+  addRow("Tiempo total EMPAQUE", empaqueTot, totalT, totalT, 1, COLORES[8], "row-l2");
+
+  // Donut: hojas (concepto granular)
+  const tRows = [
+    ["Prensa ajuste", pBd.ajuste||0, COLORES[0]],
+    ["Prensa cruces", pBd.cruces||0, COLORES[1]],
+    ["Prensa producción", pBd.produccion||0, COLORES[2]],
+    ["Prensa limpieza", pBd.limpieza||0, COLORES[3]],
+    ["Rebo ajuste", rBd.ajuste||0, COLORES[4]],
+    ["Rebo cruces", rBd.cruces||0, COLORES[5]],
+    ["Rebo producción", rBd.produccion||0, COLORES[6]],
+    ["Rebo limpieza", rBd.limpieza||0, COLORES[7]],
+    ["Empaque", empaqueTot, COLORES[8]]
+  ];
   renderDonut("donut-tiempos", tRows.map(([k,v,c])=>({label:k, value:v||0, color:c})));
 
   const det=$("r_detalle"); det.innerHTML="";
@@ -1111,7 +1208,48 @@ function generarPDF(){
   setTimeout(()=>{ f.contentWindow.focus(); f.contentWindow.print(); }, 300);
 }
 
-document.addEventListener("DOMContentLoaded", async ()=>{ await cargarCatalogos(); initUI(); });
+// === capa de acceso ===
+// Hash SHA-256 dividido en 4 fragmentos para no exponer un único string buscable.
+const _q = ["023e33504ab909cf","87a6f4e4e545090e","40bdc0a2153e5b68","b19f7fad2b737904"];
+const _qk = "_unlocked_v1";
+async function _h(s){ const b = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(s)); return [...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,"0")).join(""); }
+async function _v(s){ return (await _h(s)) === _q.join(""); }
+function _initLock(){
+  if(localStorage.getItem(_qk) === "1"){ document.getElementById("_lk").classList.add("hidden"); return true; }
+  let buf = "";
+  const dots = document.querySelectorAll("#_lk ._dot");
+  const refresh = () => dots.forEach((d,i)=>d.classList.toggle("f", i<buf.length));
+  const tryUnlock = async () => {
+    if(await _v(buf)){
+      localStorage.setItem(_qk, "1");
+      document.getElementById("_lk").classList.add("hidden");
+    } else {
+      document.getElementById("_lk").classList.add("_w");
+      setTimeout(()=>{ document.getElementById("_lk").classList.remove("_w"); buf=""; refresh(); }, 450);
+    }
+  };
+  document.querySelectorAll("#_lk ._k button").forEach(b=>{
+    b.addEventListener("click", async ()=>{
+      const k = b.dataset.k;
+      if(k === "c"){ buf = buf.slice(0,-1); refresh(); }
+      else if(k === "e"){ if(buf.length>=4) await tryUnlock(); }
+      else if(buf.length < 4){ buf += k; refresh(); if(buf.length===4) setTimeout(tryUnlock, 150); }
+    });
+  });
+  document.addEventListener("keydown", async e=>{
+    if(document.getElementById("_lk").classList.contains("hidden")) return;
+    if(/^[0-9]$/.test(e.key) && buf.length<4){ buf+=e.key; refresh(); if(buf.length===4) setTimeout(tryUnlock,150); }
+    else if(e.key === "Backspace"){ buf=buf.slice(0,-1); refresh(); }
+    else if(e.key === "Enter" && buf.length>=4){ await tryUnlock(); }
+  });
+  return false;
+}
+
+document.addEventListener("DOMContentLoaded", async ()=>{
+  _initLock();
+  await cargarCatalogos();
+  initUI();
+});
 </script>
 </body>
 </html>
