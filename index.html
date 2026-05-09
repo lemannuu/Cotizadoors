@@ -1,3 +1,4 @@
+
 <!doctype html>
 <html lang="es">
 <head>
@@ -184,12 +185,12 @@
     <div class="row three">
       <div><label>Etiquetas/rollo <span class="pill auto">auto</span></label><input type="text" inputmode="numeric" class="num-input" id="etiq_rollo"></div>
       <div><label>Rollos/caja <span class="pill auto">auto</span></label><input type="text" inputmode="numeric" class="num-input" id="rollos_caja"></div>
-      <div><label>Costo envío por caja (USD)</label><input type="number" id="costo_envio_caja" step="0.5" value="120"></div>
+      <div><label>Costo envío por caja (MXN)</label><input type="number" id="costo_envio_caja" step="0.5" value="120"></div>
     </div>
     <div class="row three">
-      <div><label>Costo centro (USD/m)</label><input type="number" id="costo_centro" step="0.01" value="15.7"></div>
-      <div><label>Costo caja (USD)</label><input type="number" id="costo_caja" step="0.01" value="10.5"></div>
-      <div><label>Costo bolsa (USD/u)</label><input type="number" id="costo_bolsa" step="0.001" value="0.035"></div>
+      <div><label>Costo centro (MXN/m)</label><input type="number" id="costo_centro" step="0.01" value="15.7"></div>
+      <div><label>Costo caja (MXN)</label><input type="number" id="costo_caja" step="0.01" value="10.5"></div>
+      <div><label>Costo bolsa (MXN/u)</label><input type="number" id="costo_bolsa" step="0.001" value="0.035"></div>
     </div>
   </section>
 
@@ -258,8 +259,8 @@
     <h2>8. Material</h2>
     <div class="row full"><div><label>Material</label><select id="material"></select></div></div>
     <div class="row three">
-      <div><label>Precio m² (USD)</label><input type="number" id="precio_m2" step="0.0001" readonly></div>
-      <div><label>Metros/bobina</label><input type="number" id="metros_bobina" readonly></div>
+      <div><label>Precio m² (USD) <span class="pill auto">editable</span></label><input type="number" id="precio_m2" step="0.0001"></div>
+      <div><label>Metros/bobina <span class="pill auto">editable</span></label><input type="number" id="metros_bobina"></div>
       <div><label>Adhesivo</label><input id="adhesivo" value="Permanente"></div>
     </div>
   </section>
@@ -281,7 +282,7 @@
           <option value="60d">60 días tras entrega</option>
         </select>
       </div>
-      <div><label>Días financ. efectivos <span class="pill auto">auto</span></label><input type="number" id="fin_dias" readonly></div>
+      <div><label>Días financ. efectivos <span class="pill auto">auto · editable</span></label><input type="number" id="fin_dias"></div>
     </div>
     <hr>
     <div class="row three">
@@ -297,6 +298,34 @@
       <div></div>
     </div>
     <div class="nota"><b>Notas fijas:</b> Tasa anual 10% · $/hr prensa USD 38.85 · $/hr rebo USD 22.27</div>
+  </section>
+
+  <!-- 10. OVERRIDE TIEMPOS -->
+  <section class="card full">
+    <h2>10. Override tiempos de máquina <span class="badge">avanzado · opcional</span></h2>
+    <label class="switch-row" for="override_tiempos">
+      <span class="switch"><input type="checkbox" id="override_tiempos"><span class="slider"></span></span>
+      <span><b>Activar override</b> · ignora los tiempos de la categoría y usa los míos</span>
+    </label>
+    <div id="override-fields" style="display:none;margin-top:8px">
+      <p class="hint">Estos valores reemplazan los de la categoría seleccionada. Útil para trabajos con tiempos atípicos o para calibrar.</p>
+      <div class="row four">
+        <div><label>Vestido prensa (min)</label><input type="number" id="ov_min_ajuste" step="1" value="28"></div>
+        <div><label>Cruces prensa (min/cambio)</label><input type="number" id="ov_min_cambios" step="1" value="18"></div>
+        <div><label>Velocidad prensa (m/min)</label><input type="number" id="ov_velocidad" step="1" value="40"></div>
+        <div><label>Limpieza prensa (min)</label><input type="number" id="ov_min_limpieza" step="1" value="18"></div>
+      </div>
+      <div class="row four">
+        <div><label>Vestido rebo (min)</label><input type="number" id="ov_rebo_ajuste" step="1" value="12"></div>
+        <div><label>Cruces rebo (min/cambio)</label><input type="number" id="ov_rebo_cambios" step="1" value="7"></div>
+        <div><label>Velocidad rebo (m/min)</label><input type="number" id="ov_rebo_velocidad" step="1" value="31"></div>
+        <div><label>Limpieza rebo (min)</label><input type="number" id="ov_rebo_limpieza" step="1" value="11"></div>
+      </div>
+      <div class="row">
+        <div><label>Empaque (min/caja)</label><input type="number" id="ov_empaquetado" step="1" value="14"></div>
+        <div></div>
+      </div>
+    </div>
   </section>
 
   <!-- BOTONES -->
@@ -350,6 +379,9 @@
     <h3 style="font-size:13px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin:14px 0 4px">Geometría y scrap</h3>
     <div id="donut-geom"></div>
     <div class="table-wrap"><table style="margin-top:10px"><tbody id="r_detalle"></tbody></table></div>
+
+    <h3 style="font-size:13px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin:14px 0 4px">💡 Sugerencias para mejorar costo / score</h3>
+    <div id="r_sugerencias"></div>
 
     <details><summary>JSON crudo (debug)</summary><pre id="r_json" style="font-size:11px;background:#0f172a;color:#e2e8f0;padding:10px;border-radius:6px;overflow:auto"></pre></details>
   </section>
@@ -578,6 +610,10 @@ function initUI(){
   $("cobrar_placa_aparte").addEventListener("change", saveState);
   $("compromiso").addEventListener("change", saveState);
   $("desc_compromiso").addEventListener("input", saveState);
+  $("override_tiempos").addEventListener("change", e=>{
+    $("override-fields").style.display = e.target.checked ? "block" : "none";
+    saveState();
+  });
   $("tc").addEventListener("input", ()=>{ recalcCostoPlaca(); saveState(); });
 
   ["eje","desarrollo"].forEach(id=>$(id).addEventListener("input", ()=>{ recalcGeometria(); recalcCostoPlaca(); saveState(); }));
@@ -616,6 +652,7 @@ function initUI(){
   $("tintas-section").style.display = _state.tieneTintas?"block":"none";
   $("maquina-section").style.display = _state.tieneTintas?"none":"block";
   $("pleca-fields").style.display = $("lleva_pleca").checked?"block":"none";
+  $("override-fields").style.display = $("override_tiempos").checked?"block":"none";
   refreshTintaList(restored ? restored._tintas : null);
   actualizarBadgeMaquina(); actualizarPillUtilidad(); recalcArranque(); recalcGeometria(); recalcTerminos(); recalcCostoPlaca();
   // formatear inputs num al cargar
@@ -630,7 +667,7 @@ function validar(I){
   if(!I.precio_m2) e.push("Material sin precio");
   if(!I.etiq_rollo||I.etiq_rollo<=0) e.push("Etiq/rollo inválido");
   if(!I.rollos_caja||I.rollos_caja<=0) e.push("Rollos/caja inválido");
-  if(I.utilidad < STD.utilidad_minima) e.push(`⚠ Utilidad ${(I.utilidad*100).toFixed(1)}% < mínimo ${STD.utilidad_minima*100}% — requiere autorización`);
+  // utilidad libre — solo info visual en pill, no se valida
   return e;
 }
 
@@ -666,6 +703,14 @@ function getInputs(volOver, maqOver){
     hr_prensa:STD.hr_prensa, hr_rebo:STD.hr_rebo,
     costo_centro:+$("costo_centro").value, costo_caja:+$("costo_caja").value,
     costo_bolsa:+$("costo_bolsa").value, costo_envio_caja:+$("costo_envio_caja").value,
+    override_tiempos: $("override_tiempos").checked,
+    ov: {
+      min_ajuste:+$("ov_min_ajuste").value, min_cambios:+$("ov_min_cambios").value,
+      velocidad:+$("ov_velocidad").value, min_limpieza:+$("ov_min_limpieza").value,
+      rebo_ajuste:+$("ov_rebo_ajuste").value, rebo_cambios:+$("ov_rebo_cambios").value,
+      rebo_velocidad:+$("ov_rebo_velocidad").value, rebo_limpieza:+$("ov_rebo_limpieza").value,
+      empaquetado:+$("ov_empaquetado").value
+    },
     tintas
   };
 }
@@ -691,6 +736,17 @@ function calcularCore(I){
   const cR = inferirCategoria(I.numTintas, I.paso_eje, I.laminado);
   let cat = cR.cat;
   const sePuedeImprimir = I.tieneTintas && I.maquina==="comco";
+
+  // Override tiempos manual
+  if(I.override_tiempos){
+    cat = {...cat,
+      min_ajuste: I.ov.min_ajuste, min_cambios: I.ov.min_cambios,
+      velocidad: I.ov.velocidad, min_limpieza: I.ov.min_limpieza,
+      rebo_ajuste: I.ov.rebo_ajuste, rebo_cambios: I.ov.rebo_cambios,
+      rebo_velocidad: I.ov.rebo_velocidad, rebo_limpieza: I.ov.rebo_limpieza,
+      empaquetado: I.ov.empaquetado
+    };
+  }
 
   // Si china, sobreescribir tiempos
   let perfilChina = null;
@@ -745,9 +801,15 @@ function calcularCore(I){
   const total_m2 = (ancho/1000)*m_totales;
   const material_millar = (total_m2*I.precio_m2)/I.volumen;
 
+  // Tinta: m²_impresos × proporción × g/m² × USD/kg ÷ 1000 = USD
   let tinta_total=0, tinta_millar=0;
   if(sePuedeImprimir){
-    I.tintas.forEach(t=>{ tinta_total += ((t.prop*ancho)*t.gramos/1000)*t.costo; });
+    const m2_impresos = (ancho/1000) * m_lineales;
+    I.tintas.forEach(t=>{
+      // t.gramos = g/m² (gramaje seco), t.costo = USD/kg
+      const gramos = m2_impresos * t.prop * t.gramos;
+      tinta_total += gramos * t.costo / 1000;
+    });
     tinta_millar = tinta_total/I.volumen;
   }
 
@@ -921,7 +983,74 @@ function renderResultados(I,R){
     {label:"Scrap variable", value:R.scrap_var, color:COLORES[6]}
   ]);
 
+  // Sugerencias dinámicas
+  const sug = generarSugerencias(I, R);
+  const cont = $("r_sugerencias");
+  cont.innerHTML = sug.length ? sug.map(s=>`<div class="alert ${s.tipo}" style="margin:6px 0"><b>${s.titulo}</b><br>${s.detalle}</div>`).join("") : '<div class="hint">El trabajo está bien dimensionado. Sin sugerencias automáticas.</div>';
+
   $("r_json").textContent = JSON.stringify({inputs:I, resultado:R}, null, 2);
+}
+
+function generarSugerencias(I, R){
+  const s = [];
+  const placa_pct = R.placa_millar / R.costo_total;
+  const lam_pct = R.laminado_millar / R.costo_total;
+  const setup_min = (R.prensa_bd.ajuste||0) + (R.prensa_bd.cruces||0) + (R.prensa_bd.limpieza||0) + (R.rebo_bd.ajuste||0) + (R.rebo_bd.cruces||0) + (R.rebo_bd.limpieza||0);
+  const prod_min = (R.prensa_bd.produccion||0) + (R.rebo_bd.produccion||0);
+  const setup_pct = R.tiempo_total_min ? setup_min/R.tiempo_total_min : 0;
+
+  // 1. Score bajo
+  if(R.score < STD.score_bueno){
+    const sube_util = Math.min(45, (I.utilidad*100)+5);
+    const nuevo_precio = R.costo_final / (1 - sube_util/100);
+    s.push({ tipo:"warn", titulo:`⚠ Score ${fmtUsd(R.score)}/hr — bajo`, detalle:`Sube utilidad de ${(I.utilidad*100).toFixed(0)}% a ${sube_util}% → precio sube a ${fmtUsd(nuevo_precio)}/millar y score sube ~25%. O renegocia volumen mínimo.` });
+  }
+
+  // 2. Placa pesada en pedido único
+  if(I.frecuencia===1 && !I.cobrar_placa_aparte && placa_pct > 0.10){
+    s.push({ tipo:"warn", titulo:`Placa pesa ${(placa_pct*100).toFixed(0)}% del costo`, detalle:`Marca "Cobrar placa aparte" en sección 2. El cliente paga el set una sola vez (${fmtUsd(R.placa_set_usd)}) y el precio/millar baja ${fmtUsd(R.placa_millar)}.` });
+  }
+
+  // 3. Setup pesa más que producción (trabajo chico)
+  if(setup_pct > 0.55 && I.volumen < 100){
+    const vol_2x = I.volumen * 2;
+    s.push({ tipo:"warn", titulo:`Setup ${(setup_pct*100).toFixed(0)}% del tiempo total`, detalle:`Trabajo chico: el vestido y cruces dominan. Subir volumen a ${vol_2x.toLocaleString("en-US")} millares (2×) baja costo/millar ~${(setup_pct*40).toFixed(0)}% porque diluyes el setup.` });
+  }
+
+  // 4. Laminado caro
+  if(lam_pct > 0.20){
+    s.push({ tipo:"warn", titulo:`Laminado pesa ${(lam_pct*100).toFixed(0)}% del costo`, detalle:`El tipo "${I.laminado}" es caro. Si el cliente acepta brillante en lugar de sobre-imprimible, ahorras ${fmtUsd(R.laminado_millar*0.95)}/millar.` });
+  }
+
+  // 5. Suaje pesa en pedido único
+  const suaje_pct = R.suaje_millar / R.costo_total;
+  if(I.frecuencia===1 && suaje_pct > 0.08){
+    s.push({ tipo:"warn", titulo:`Suaje pesa ${(suaje_pct*100).toFixed(0)}%`, detalle:`Pedido único: considera cobrar el suaje aparte o exigir compromiso de volumen para amortizarlo.` });
+  }
+
+  // 6. Banda con holgura
+  const sobra = I.ancho_banda - I.ancho_efectivo;
+  if(sobra > I.eje*0.8 && I.maquina==="comco"){
+    s.push({ tipo:"warn", titulo:`Sobra ${sobra.toFixed(0)} mm de banda`, detalle:`El ancho efectivo (${I.ancho_efectivo.toFixed(0)} mm) deja ${sobra.toFixed(0)} mm sin usar. Considera subir posiciones al eje a ${I.paso_eje+1} si el suaje lo permite — duplicas producción por vuelta.` });
+  }
+
+  // 7. Utilidad baja
+  if(I.utilidad < 0.30){
+    s.push({ tipo:"warn", titulo:`Utilidad ${(I.utilidad*100).toFixed(1)}% — abajo del rango sano`, detalle:`Tu rango sugerido es 30–35%. A 35% el precio sube a ${fmtUsd(R.costo_final/(1-0.35))}/millar y mantienes margen sano sin perder competitividad.` });
+  }
+
+  // 8. Material caro vs alternativos
+  const mat_pct = R.material_millar / R.costo_total;
+  if(mat_pct > 0.50){
+    s.push({ tipo:"warn", titulo:`Material es ${(mat_pct*100).toFixed(0)}% del costo`, detalle:`Material domina. Verifica si hay un sustrato equivalente más barato en el catálogo o negocia precio con el proveedor para esta corrida.` });
+  }
+
+  // 9. Buen score → felicitar / oportunidad de cierre
+  if(R.score >= STD.score_excelente){
+    s.push({ tipo:"warn", titulo:`✓ Score excelente (${fmtUsd(R.score)}/hr)`, detalle:`Trabajo muy rentable. Buen candidato para ofrecer ligero descuento por compromiso (3-5%) y cerrar el cliente recurrente.` });
+  }
+
+  return s;
 }
 
 function calcularEscalas(){
