@@ -3,13 +3,18 @@
 <html lang="es">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Cotizador Identilabel — v0.6</title>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0f172a">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Cotizador">
+<link rel="manifest" href="manifest.json">
+<title>Cotizador Identilabel — v0.8</title>
 <style>
   :root{--bg:#f6f7f9;--card:#fff;--ink:#1a1d24;--muted:#6b7280;--line:#e5e7eb;--accent:#1e3a8a;--accent2:#dc2626;--good:#16a34a;--warn:#d97706;--bad:#dc2626;--soft:#eef2ff}
   *{box-sizing:border-box}
-  html{-webkit-text-size-adjust:100%}
-  body{margin:0;font:14px/1.45 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--ink)}
+  html{-webkit-text-size-adjust:100%;overflow-x:hidden}
+  body{margin:0;font:14px/1.45 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--ink);overflow-x:hidden;width:100%;max-width:100vw}
   header{background:#0f172a;color:#fff;padding:14px 20px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;position:sticky;top:0;z-index:100}
   header h1{font-size:16px;margin:0;font-weight:600} header small{color:#94a3b8}
   main{max-width:1200px;margin:0 auto;padding:16px;display:grid;grid-template-columns:1fr 1fr;gap:16px}
@@ -25,7 +30,14 @@
   .row.three{grid-template-columns:1fr 1fr 1fr} .row.four{grid-template-columns:1fr 1fr 1fr 1fr} .row.full{grid-template-columns:1fr}
   @media (max-width:600px){
     .row,.row.three,.row.four{grid-template-columns:1fr;gap:10px;margin-bottom:10px}
+    .row > div:empty{display:none}
+    .nota,.hint{font-size:12px}
+    .calc-box{font-size:11px}
+    .card h2{font-size:12px}
   }
+  /* Inputs siempre full-width sin desbordar */
+  .row > div{min-width:0}
+  input,select{max-width:100%}
   @media (min-width:601px) and (max-width:900px){
     .row.four{grid-template-columns:1fr 1fr}
   }
@@ -155,7 +167,7 @@
     </div>
     <hr>
     <div class="row three">
-      <div><label>TC USD→MXN</label><input type="number" id="tc" step="0.01" value="19"></div>
+      <div><label>TC USD→MXN</label><input type="number" inputmode="decimal" id="tc" step="0.01" value="19"></div>
       <div><label>Moneda venta</label><select id="moneda"><option value="MXN">MXN</option><option value="USD">USD</option></select></div>
       <div></div>
     </div>
@@ -219,12 +231,12 @@
     <div class="row three">
       <div><label>Etiquetas/rollo <span class="pill auto">auto</span></label><input type="text" inputmode="numeric" class="num-input" id="etiq_rollo"></div>
       <div><label>Rollos/caja <span class="pill auto">auto</span></label><input type="text" inputmode="numeric" class="num-input" id="rollos_caja"></div>
-      <div><label>Costo envío por caja (MXN)</label><input type="number" id="costo_envio_caja" step="0.5" value="120"></div>
+      <div><label>Costo envío por caja (MXN)</label><input type="number" inputmode="decimal" id="costo_envio_caja" step="0.5" value="120"></div>
     </div>
     <div class="row three">
-      <div><label>Costo centro (MXN/m)</label><input type="number" id="costo_centro" step="0.01" value="15.7"></div>
-      <div><label>Costo caja (MXN)</label><input type="number" id="costo_caja" step="0.01" value="10.5"></div>
-      <div><label>Costo bolsa (MXN/u)</label><input type="number" id="costo_bolsa" step="0.001" value="0.035"></div>
+      <div><label>Costo centro (MXN/m)</label><input type="number" inputmode="decimal" id="costo_centro" step="0.01" value="15.7"></div>
+      <div><label>Costo caja (MXN)</label><input type="number" inputmode="decimal" id="costo_caja" step="0.01" value="10.5"></div>
+      <div><label>Costo bolsa (MXN/u)</label><input type="number" inputmode="decimal" id="costo_bolsa" step="0.001" value="0.035"></div>
     </div>
   </section>
 
@@ -232,19 +244,19 @@
   <section class="card">
     <h2>5. Etiqueta y geometría</h2>
     <div class="row three">
-      <div><label>Eje (mm)</label><input type="number" id="eje" step="0.1" value="120"></div>
-      <div><label>Desarrollo (mm)</label><input type="number" id="desarrollo" step="0.1" value="140"></div>
-      <div><label>Ancho banda (mm) <span class="pill auto">según máquina</span></label><input type="number" id="ancho_banda"></div>
+      <div><label>Eje (mm)</label><input type="number" inputmode="decimal" id="eje" step="0.1" value="120"></div>
+      <div><label>Desarrollo (mm)</label><input type="number" inputmode="decimal" id="desarrollo" step="0.1" value="140"></div>
+      <div><label>Ancho banda (mm) <span class="pill auto">según máquina</span></label><input type="number" inputmode="numeric" id="ancho_banda"></div>
     </div>
     <div class="row three">
-      <div><label>Posiciones al eje <span class="pill auto">auto</span></label><input type="number" id="paso_eje"></div>
-      <div><label>Ancho efectivo (mm) <span class="pill auto">auto</span></label><input type="number" id="ancho_efectivo" step="0.1"></div>
-      <div><label>GAP eje (mm)</label><input type="number" id="gap_eje" step="0.001" value="3.175"></div>
+      <div><label>Posiciones al eje <span class="pill auto">auto</span></label><input type="number" inputmode="numeric" id="paso_eje"></div>
+      <div><label>Ancho efectivo (mm) <span class="pill auto">auto</span></label><input type="number" inputmode="decimal" id="ancho_efectivo" step="0.1"></div>
+      <div><label>GAP eje (mm)</label><input type="number" inputmode="decimal" id="gap_eje" step="0.001" value="3.175"></div>
     </div>
     <div class="row three">
-      <div><label>Posiciones al desarrollo <span class="pill auto">auto</span></label><input type="number" id="paso_des"></div>
-      <div><label>Dientes engrane (40–120) <span class="pill auto">auto</span></label><input type="number" id="dientes" min="40" max="120"></div>
-      <div><label>GAP desarrollo (mm) <span class="pill auto">auto</span></label><input type="number" id="gap_des" step="0.001"></div>
+      <div><label>Posiciones al desarrollo <span class="pill auto">auto</span></label><input type="number" inputmode="numeric" id="paso_des"></div>
+      <div><label>Dientes engrane (40–120) <span class="pill auto">auto</span></label><input type="number" inputmode="numeric" id="dientes" min="40" max="120"></div>
+      <div><label>GAP desarrollo (mm) <span class="pill auto">auto</span></label><input type="number" inputmode="decimal" id="gap_des" step="0.001"></div>
     </div>
     <div class="calc-box" id="calc-geom">—</div>
     <button id="btn-recalc-geom" class="secondary" style="margin-top:8px;padding:6px 10px;font-size:12px">↻ Recalcular geometría auto</button>
@@ -255,18 +267,27 @@
     <h2>6. Suaje y pleca</h2>
     <p class="hint" style="margin-bottom:8px"><b>Suaje:</b> 40k m, 6 reaf., reafilado MXN 1,260 fijo. <b>Pleca:</b> 50k m, 5 reaf., reafilado MXN 1,050 fijo.</p>
     <div class="row">
-      <div><label>Costo suaje nuevo (MXN)</label><input type="text" inputmode="numeric" class="num-input" id="suaje_costo_mxn" value="9,450"></div>
+      <div><label>Costo suaje nuevo (MXN)</label><input type="text" inputmode="decimal" class="num-input" id="suaje_costo_mxn" value="9,450"></div>
       <div></div>
     </div>
+    <label class="switch-row" for="cobrar_suaje_aparte">
+      <span class="switch"><input type="checkbox" id="cobrar_suaje_aparte"><span class="slider"></span></span>
+      <span><b>Cobrar suaje aparte</b> (no entra al precio/millar; partida adicional en PDF)</span>
+    </label>
+    <hr>
     <label class="switch-row" for="lleva_pleca">
       <span class="switch"><input type="checkbox" id="lleva_pleca"><span class="slider"></span></span>
       <span><b>Lleva pleca de corte</b></span>
     </label>
     <div id="pleca-fields" style="display:none;margin-top:6px">
       <div class="row">
-        <div><label>Costo pleca nueva (MXN)</label><input type="text" inputmode="numeric" class="num-input" id="pleca_costo_mxn" value="7,350"></div>
+        <div><label>Costo pleca nueva (MXN)</label><input type="text" inputmode="decimal" class="num-input" id="pleca_costo_mxn" value="7,350"></div>
         <div></div>
       </div>
+      <label class="switch-row" for="cobrar_pleca_aparte">
+        <span class="switch"><input type="checkbox" id="cobrar_pleca_aparte"><span class="slider"></span></span>
+        <span><b>Cobrar pleca aparte</b> (no entra al precio/millar; partida adicional en PDF)</span>
+      </label>
     </div>
   </section>
 
@@ -293,8 +314,8 @@
     <h2>8. Material</h2>
     <div class="row full"><div><label>Material</label><select id="material"></select></div></div>
     <div class="row three">
-      <div><label>Precio m² (USD) <span class="pill auto">editable</span></label><input type="number" id="precio_m2" step="0.0001"></div>
-      <div><label>Metros/bobina <span class="pill auto">editable</span></label><input type="number" id="metros_bobina"></div>
+      <div><label>Precio m² (USD) <span class="pill auto">editable</span></label><input type="number" inputmode="decimal" id="precio_m2" step="0.0001"></div>
+      <div><label>Metros/bobina <span class="pill auto">editable</span></label><input type="number" inputmode="numeric" id="metros_bobina"></div>
       <div><label>Adhesivo</label><input id="adhesivo" value="Permanente"></div>
     </div>
   </section>
@@ -303,8 +324,8 @@
   <section class="card">
     <h2>9. Comercial</h2>
     <div class="row">
-      <div><label>% Utilidad <span class="pill" id="util-pill">35%</span></label><input type="number" id="utilidad" step="0.5" value="35"></div>
-      <div><label>Lead time entrega (días)</label><input type="number" id="dias_prod" value="25"></div>
+      <div><label>% Utilidad <span class="pill" id="util-pill">35%</span></label><input type="number" inputmode="decimal" id="utilidad" step="0.5" value="35"></div>
+      <div><label>Lead time entrega (días)</label><input type="number" inputmode="numeric" id="dias_prod" value="25"></div>
     </div>
     <div class="row">
       <div><label>Términos de pago</label>
@@ -316,7 +337,7 @@
           <option value="60d">60 días tras entrega</option>
         </select>
       </div>
-      <div><label>Días financ. efectivos <span class="pill auto">auto · editable</span></label><input type="number" id="fin_dias"></div>
+      <div><label>Días financ. efectivos <span class="pill auto">auto · editable</span></label><input type="number" inputmode="numeric" id="fin_dias"></div>
     </div>
     <hr>
     <div class="row three">
@@ -328,7 +349,7 @@
           <option value="anual">Anual</option>
         </select>
       </div>
-      <div><label>% Descuento compromiso</label><input type="number" id="desc_compromiso" step="0.5" value="0"></div>
+      <div><label>% Descuento compromiso</label><input type="number" inputmode="decimal" id="desc_compromiso" step="0.5" value="0"></div>
       <div></div>
     </div>
     <div class="nota"><b>Notas fijas:</b> Tasa anual 10% · $/hr prensa USD 38.85 · $/hr rebo USD 22.27</div>
@@ -344,19 +365,19 @@
     <div id="override-fields" style="display:none;margin-top:8px">
       <p class="hint">Estos valores reemplazan los de la categoría seleccionada. Útil para trabajos con tiempos atípicos o para calibrar.</p>
       <div class="row four">
-        <div><label>Vestido prensa (min)</label><input type="number" id="ov_min_ajuste" step="1" value="28"></div>
-        <div><label>Cruces prensa (min/cambio)</label><input type="number" id="ov_min_cambios" step="1" value="18"></div>
-        <div><label>Velocidad prensa (m/min)</label><input type="number" id="ov_velocidad" step="1" value="40"></div>
-        <div><label>Limpieza prensa (min)</label><input type="number" id="ov_min_limpieza" step="1" value="18"></div>
+        <div><label>Vestido prensa (min)</label><input type="number" inputmode="numeric" id="ov_min_ajuste" step="1" value="28"></div>
+        <div><label>Cruces prensa (min/cambio)</label><input type="number" inputmode="numeric" id="ov_min_cambios" step="1" value="18"></div>
+        <div><label>Velocidad prensa (m/min)</label><input type="number" inputmode="numeric" id="ov_velocidad" step="1" value="40"></div>
+        <div><label>Limpieza prensa (min)</label><input type="number" inputmode="numeric" id="ov_min_limpieza" step="1" value="18"></div>
       </div>
       <div class="row four">
-        <div><label>Vestido rebo (min)</label><input type="number" id="ov_rebo_ajuste" step="1" value="12"></div>
-        <div><label>Cruces rebo (min/cambio)</label><input type="number" id="ov_rebo_cambios" step="1" value="7"></div>
-        <div><label>Velocidad rebo (m/min)</label><input type="number" id="ov_rebo_velocidad" step="1" value="31"></div>
-        <div><label>Limpieza rebo (min)</label><input type="number" id="ov_rebo_limpieza" step="1" value="11"></div>
+        <div><label>Vestido rebo (min)</label><input type="number" inputmode="numeric" id="ov_rebo_ajuste" step="1" value="12"></div>
+        <div><label>Cruces rebo (min/cambio)</label><input type="number" inputmode="numeric" id="ov_rebo_cambios" step="1" value="7"></div>
+        <div><label>Velocidad rebo (m/min)</label><input type="number" inputmode="numeric" id="ov_rebo_velocidad" step="1" value="31"></div>
+        <div><label>Limpieza rebo (min)</label><input type="number" inputmode="numeric" id="ov_rebo_limpieza" step="1" value="11"></div>
       </div>
       <div class="row">
-        <div><label>Empaque (min/caja)</label><input type="number" id="ov_empaquetado" step="1" value="14"></div>
+        <div><label>Empaque (min/caja)</label><input type="number" inputmode="numeric" id="ov_empaquetado" step="1" value="14"></div>
         <div></div>
       </div>
     </div>
@@ -400,6 +421,12 @@
       <div class="kpi"><div class="label">Precio / millar</div><div class="val good" id="r_precio">—</div><div class="sub" id="r_precio_mxn">—</div></div>
       <div class="kpi"><div class="label">Tiempo total</div><div class="val" id="r_tiempo">—</div><div class="sub" id="r_tiempo_sub">—</div></div>
       <div class="kpi"><div class="label">Score · USD/hr-máq</div><div class="val" id="r_score">—</div><div class="sub" id="r_score_sub">—</div></div>
+    </div>
+
+    <!-- Breakeven -->
+    <div class="kpi" style="margin-bottom:14px;background:#fffbeb;border-color:#fde68a">
+      <div class="label">📉 Análisis de breakeven</div>
+      <div id="r_breakeven" class="sub" style="font-size:13px;color:var(--ink);line-height:1.6;margin-top:4px">—</div>
     </div>
 
     <h3 style="font-size:13px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin:14px 0 4px">Desglose de costos (jerárquico)</h3>
@@ -642,6 +669,8 @@ function initUI(){
 
   $("lleva_pleca").addEventListener("change", e=>{ $("pleca-fields").style.display=e.target.checked?"block":"none"; });
   $("cobrar_placa_aparte").addEventListener("change", saveState);
+  $("cobrar_suaje_aparte").addEventListener("change", saveState);
+  $("cobrar_pleca_aparte").addEventListener("change", saveState);
   $("compromiso").addEventListener("change", saveState);
   $("desc_compromiso").addEventListener("input", saveState);
   $("override_tiempos").addEventListener("change", e=>{
@@ -730,7 +759,9 @@ function getInputs(volOver, maqOver){
     cobrar_placa_aparte:$("cobrar_placa_aparte").checked,
     compromiso:$("compromiso").value, desc_compromiso:+$("desc_compromiso").value/100,
     suaje_costo_mxn:getNum("suaje_costo_mxn"),
+    cobrar_suaje_aparte:$("cobrar_suaje_aparte").checked,
     lleva_pleca:$("lleva_pleca").checked, pleca_costo_mxn:getNum("pleca_costo_mxn"),
+    cobrar_pleca_aparte:$("cobrar_pleca_aparte").checked,
     utilidad:+$("utilidad").value/100, tc:+$("tc").value, moneda:$("moneda").value,
     terminos:$("terminos").value, fin_dias:+$("fin_dias").value, fin_tasa:STD.fin_tasa,
     m_arranque:getNum("m_arranque"), dias_prod:+$("dias_prod").value,
@@ -851,15 +882,19 @@ function calcularCore(I){
   const gt_reaf_s = reaf_x*STD.suaje_costo_reafilado_mxn;
   const suajes_x = m_totales/(STD.suaje_metros*STD.suaje_reafilados);
   const gt_s = suajes_x*I.suaje_costo_mxn;
-  const suaje_millar = ((gt_reaf_s+gt_s)/I.tc)/I.volumen;
+  const suaje_total_usd = (gt_reaf_s+gt_s)/I.tc;
+  const suaje_set_usd = I.suaje_costo_mxn / I.tc;
+  const suaje_millar = I.cobrar_suaje_aparte ? 0 : suaje_total_usd / I.volumen;
 
-  let pleca_millar=0;
+  let pleca_millar=0, pleca_total_usd=0, pleca_set_usd=0;
   if(I.lleva_pleca){
     const reaf_p = m_totales/STD.pleca_metros;
     const gt_r_p = reaf_p*STD.pleca_costo_reafilado_mxn;
     const pleca_x = m_totales/(STD.pleca_metros*STD.pleca_reafilados);
     const gt_p = pleca_x*I.pleca_costo_mxn;
-    pleca_millar = ((gt_r_p+gt_p)/I.tc)/I.volumen;
+    pleca_total_usd = (gt_r_p+gt_p)/I.tc;
+    pleca_set_usd = I.pleca_costo_mxn / I.tc;
+    pleca_millar = I.cobrar_pleca_aparte ? 0 : pleca_total_usd / I.volumen;
   }
 
   let placa_millar=0, placa_set_usd=0, placa_trabajo_usd=0;
@@ -897,7 +932,7 @@ function calcularCore(I){
     material_millar, costo_prod_millar, tinta_millar,
     suaje_millar, pleca_millar, placa_millar, envio_millar, empaque_millar, laminado_millar,
     costo_total, financ, costo_final, precio_base_usd, precio_usd, precio_mxn, utilidad_usd, desc_aplicado_usd,
-    placa_set_usd, placa_trabajo_usd,
+    placa_set_usd, placa_trabajo_usd, suaje_total_usd, suaje_set_usd, pleca_total_usd, pleca_set_usd,
     tiempo_total_min: prensa_min+sumatoria_rebo+empaque_min,
     score, horas, utilidad_total
   };
@@ -980,7 +1015,13 @@ function renderResultados(I,R){
   }
   const trFinal=document.createElement("tr"); trFinal.className="final"; trFinal.innerHTML=`<td>PRECIO SUGERIDO</td><td></td><td class="num">${fmtUsd(R.precio_usd)} /millar</td><td class="num">—</td><td class="num">${fmtMx(R.precio_mxn)}</td>`; tbody.appendChild(trFinal);
   if(I.cobrar_placa_aparte && R.placa_set_usd > 0){
-    const trP=document.createElement("tr"); trP.innerHTML=`<td colspan="2" style="font-style:italic">+ Cargo único set de placas (no incluido en precio/millar)</td><td class="num">${fmtUsd(R.placa_set_usd)}</td><td class="num">—</td><td class="num">${fmtMx(R.placa_set_usd*I.tc)}</td>`; tbody.appendChild(trP);
+    const trP=document.createElement("tr"); trP.innerHTML=`<td colspan="2" style="font-style:italic">+ Cargo único set de placas (aparte)</td><td class="num">${fmtUsd(R.placa_set_usd)}</td><td class="num">—</td><td class="num">${fmtMx(R.placa_set_usd*I.tc)}</td>`; tbody.appendChild(trP);
+  }
+  if(I.cobrar_suaje_aparte && R.suaje_set_usd > 0){
+    const trS=document.createElement("tr"); trS.innerHTML=`<td colspan="2" style="font-style:italic">+ Cargo único suaje (aparte)</td><td class="num">${fmtUsd(R.suaje_set_usd)}</td><td class="num">—</td><td class="num">${fmtMx(R.suaje_set_usd*I.tc)}</td>`; tbody.appendChild(trS);
+  }
+  if(I.lleva_pleca && I.cobrar_pleca_aparte && R.pleca_set_usd > 0){
+    const trPl=document.createElement("tr"); trPl.innerHTML=`<td colspan="2" style="font-style:italic">+ Cargo único pleca (aparte)</td><td class="num">${fmtUsd(R.pleca_set_usd)}</td><td class="num">—</td><td class="num">${fmtMx(R.pleca_set_usd*I.tc)}</td>`; tbody.appendChild(trPl);
   }
   const placaPct = R.placa_millar / R.costo_total;
   $("placa-warning").style.display = (I.frecuencia===1 && !I.cobrar_placa_aparte && placaPct > 0.15) ? "block" : "none";
@@ -1080,12 +1121,54 @@ function renderResultados(I,R){
     {label:"Scrap variable", value:R.scrap_var, color:COLORES[6]}
   ]);
 
+  // Breakeven dinámico
+  try { renderBreakeven(I, R); } catch(e){ $("r_breakeven").textContent = "(no disponible)"; }
+
   // Sugerencias dinámicas
   const sug = generarSugerencias(I, R);
   const cont = $("r_sugerencias");
   cont.innerHTML = sug.length ? sug.map(s=>`<div class="alert ${s.tipo}" style="margin:6px 0"><b>${s.titulo}</b><br>${s.detalle}</div>`).join("") : '<div class="hint">El trabajo está bien dimensionado. Sin sugerencias automáticas.</div>';
 
   $("r_json").textContent = JSON.stringify({inputs:I, resultado:R}, null, 2);
+}
+
+function calcularBreakeven(I, precioTarget){
+  // Búsqueda binaria del volumen mínimo donde el costo_final/millar ≤ precioTarget
+  let lo = 1, hi = 100000;
+  for(let i=0; i<40; i++){
+    const mid = (lo+hi)/2;
+    const I2 = {...I, volumen: mid};
+    const R = calcularCore(I2);
+    if(R.costo_final <= precioTarget) hi = mid; else lo = mid;
+    if(hi - lo < 0.5) break;
+  }
+  return Math.ceil(hi);
+}
+function renderBreakeven(I, R){
+  // 1. Costo a 2× y 5× volumen actual (curva de dilución)
+  const v2 = calcularCore({...I, volumen:I.volumen*2});
+  const v5 = calcularCore({...I, volumen:I.volumen*5});
+  const ahorro2 = (1 - v2.costo_final/R.costo_final)*100;
+  const ahorro5 = (1 - v5.costo_final/R.costo_final)*100;
+
+  // 2. Volumen donde costo se estabiliza (cambio < 1% al duplicar)
+  let estable = null;
+  for(let v=I.volumen; v<=I.volumen*20; v+=Math.max(5, Math.floor(I.volumen*0.5))){
+    const a = calcularCore({...I, volumen:v});
+    const b = calcularCore({...I, volumen:v*2});
+    if(Math.abs(1-b.costo_final/a.costo_final) < 0.01){ estable = v; break; }
+  }
+
+  // 3. Si el cliente quiere 80% del precio actual, ¿a qué volumen lo aguantas?
+  const precioReducido = R.precio_usd * 0.80;
+  const vBE = calcularBreakeven(I, precioReducido);
+
+  $("r_breakeven").innerHTML = `
+    <b>Si vendes 2× volumen (${fmtN0(I.volumen*2)} mill):</b> costo baja a ${fmtUsd(v2.costo_final)}/millar (ahorro ${ahorro2.toFixed(1)}%)<br>
+    <b>Si vendes 5× volumen (${fmtN0(I.volumen*5)} mill):</b> costo baja a ${fmtUsd(v5.costo_final)}/millar (ahorro ${ahorro5.toFixed(1)}%)<br>
+    ${estable ? `<b>Costo se estabiliza en ${fmtN0(estable)} mill</b> (a partir de ahí duplicar volumen baja menos del 1%)<br>` : ""}
+    <b>Si el cliente exige 20% descuento</b> (precio ${fmtUsd(precioReducido)}/millar): necesitarías al menos <b>${fmtN0(vBE)} millares</b> para mantener tu margen actual.
+  `;
 }
 
 function generarSugerencias(I, R){
@@ -1154,14 +1237,27 @@ function calcularEscalas(){
   const cs=[1,2,3,4,5].map(i=>parseNum($("esc"+i).value)).filter(x=>x>0).sort((a,b)=>a-b);
   if(!cs.length){ alert("Ingresa al menos una cantidad"); return; }
   let html=`<div class="table-wrap"><table class="results" style="width:100%;min-width:680px"><thead><tr><th>Millares</th><th class="num">Costo final</th><th class="num">Precio USD</th><th class="num">Precio MXN</th><th class="num">Importe MXN</th><th class="num">Desc vs menor</th><th class="num">Score USD/hr</th><th class="num">Hr</th></tr></thead><tbody>`;
-  let pBase=null;
+  let pBase=null, prevPrecio=null, anomalias=[];
   cs.forEach((c,i)=>{
     const r=calcular(c,false); if(!r) return;
     if(i===0) pBase=r.R.precio_usd;
     const desc=i===0?"—":((1-r.R.precio_usd/pBase)*100).toFixed(1)+"%";
-    html+=`<tr><td><b>${c.toLocaleString("en-US")}</b></td><td class="num">${fmtUsd(r.R.costo_final)}</td><td class="num">${fmtUsd(r.R.precio_usd)}</td><td class="num">${fmtMx(r.R.precio_mxn)}</td><td class="num">${fmtMx(r.R.precio_mxn*c)}</td><td class="num good">${desc}</td><td class="num">${fmtUsd(r.R.score)}</td><td class="num">${(r.R.tiempo_total_min/60).toFixed(1)}</td></tr>`;
+    // Detectar anomalía: si el precio sube con mayor volumen, o baja menos del 2% por duplicación
+    let claseFila = "", iconAnom = "";
+    if(prevPrecio !== null){
+      const cambio = (r.R.precio_usd - prevPrecio) / prevPrecio;
+      const ratioVol = c / cs[i-1];
+      // Esperamos: a más volumen, menos precio. Si sube → rojo; si baja menos que 2% por duplicación efectiva → amarillo
+      if(cambio > 0){ claseFila = "background:#fef2f2"; iconAnom = " ⚠"; anomalias.push(`${c} mill: precio SUBE vs ${cs[i-1]} mill (esperado bajar)`); }
+      else if(ratioVol >= 1.5 && Math.abs(cambio) < 0.02){ claseFila = "background:#fffbeb"; iconAnom = " ⚠"; anomalias.push(`${c} mill: precio baja solo ${(Math.abs(cambio)*100).toFixed(1)}% pese a +${((ratioVol-1)*100).toFixed(0)}% volumen`); }
+    }
+    html+=`<tr style="${claseFila}"><td><b>${c.toLocaleString("en-US")}${iconAnom}</b></td><td class="num">${fmtUsd(r.R.costo_final)}</td><td class="num">${fmtUsd(r.R.precio_usd)}</td><td class="num">${fmtMx(r.R.precio_mxn)}</td><td class="num">${fmtMx(r.R.precio_mxn*c)}</td><td class="num good">${desc}</td><td class="num">${fmtUsd(r.R.score)}</td><td class="num">${(r.R.tiempo_total_min/60).toFixed(1)}</td></tr>`;
+    prevPrecio = r.R.precio_usd;
   });
   html+="</tbody></table></div>";
+  if(anomalias.length){
+    html += `<div class="alert error" style="margin-top:8px"><b>⚠ Anomalías detectadas en la curva de escalas:</b><ul style="margin:4px 0 0 20px;padding:0">${anomalias.map(a=>`<li>${a}</li>`).join("")}</ul></div>`;
+  }
   $("escalas-out").innerHTML=html;
   calcular(getNum("volumen"),true);
 }
@@ -1198,6 +1294,16 @@ function generarPDF(){
     const setUsd = parts[0].R.placa_set_usd;
     const pr = mon==="USD" ? setUsd : setUsd * I0.tc;
     filas += `<tr><td style="text-align:center">1</td><td style="text-align:center">Set</td><td><b>SET DE PLACAS · cargo único</b><br><span style="font-size:11px">${I0.numTintas} placa(s) ${I0.eje}x${I0.desarrollo} mm. Vida útil ~20,000 m. No incluido en precio/millar.</span></td><td style="text-align:right">${mon==="USD"?"USD":"$"} ${pr.toLocaleString("es-MX",{minimumFractionDigits:2,maximumFractionDigits:2})}</td><td style="text-align:right"><b>${mon==="USD"?"USD":"$"} ${pr.toLocaleString("es-MX",{minimumFractionDigits:2,maximumFractionDigits:2})}</b></td></tr>`;
+  }
+  if(I0.cobrar_suaje_aparte && parts[0].R.suaje_set_usd > 0){
+    const v = parts[0].R.suaje_set_usd;
+    const pr = mon==="USD" ? v : v * I0.tc;
+    filas += `<tr><td style="text-align:center">1</td><td style="text-align:center">Pza</td><td><b>SUAJE · cargo único</b><br><span style="font-size:11px">Suaje ${I0.eje}x${I0.desarrollo} mm. Vida útil ~40,000 m con 6 reafilados. No incluido en precio/millar.</span></td><td style="text-align:right">${mon==="USD"?"USD":"$"} ${pr.toLocaleString("es-MX",{minimumFractionDigits:2,maximumFractionDigits:2})}</td><td style="text-align:right"><b>${mon==="USD"?"USD":"$"} ${pr.toLocaleString("es-MX",{minimumFractionDigits:2,maximumFractionDigits:2})}</b></td></tr>`;
+  }
+  if(I0.lleva_pleca && I0.cobrar_pleca_aparte && parts[0].R.pleca_set_usd > 0){
+    const v = parts[0].R.pleca_set_usd;
+    const pr = mon==="USD" ? v : v * I0.tc;
+    filas += `<tr><td style="text-align:center">1</td><td style="text-align:center">Pza</td><td><b>PLECA · cargo único</b><br><span style="font-size:11px">Pleca de corte. Vida útil ~50,000 m con 5 reafilados. No incluido en precio/millar.</span></td><td style="text-align:right">${mon==="USD"?"USD":"$"} ${pr.toLocaleString("es-MX",{minimumFractionDigits:2,maximumFractionDigits:2})}</td><td style="text-align:right"><b>${mon==="USD"?"USD":"$"} ${pr.toLocaleString("es-MX",{minimumFractionDigits:2,maximumFractionDigits:2})}</b></td></tr>`;
   }
   const tMap={"50_50":"50% anticipo y 50% 3 días antes de entrega","100_anticipo":"100% anticipo","contra_entrega":"100% contra entrega","30d":"30 días tras entrega","60d":"60 días tras entrega"};
   const html=`<!doctype html><html><head><meta charset="utf-8"><title>${I0.id_cot||"Cotización"}</title><style>body{font:11px/1.4 Arial,sans-serif;color:#1a1d24;margin:24px;max-width:800px}.header{background:#0f172a;color:#fff;padding:8px;text-align:center;font-size:14px;font-weight:700;letter-spacing:2px}.info{display:grid;grid-template-columns:2fr 1fr;gap:8px;margin-top:8px}.info .left,.info .right{background:#dbeafe;padding:8px}.cliente{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:8px}.cliente div{background:#dbeafe;padding:6px}table{width:100%;border-collapse:collapse;margin-top:10px}th{background:#0f172a;color:#fff;padding:6px;text-align:center;font-size:11px}td{padding:8px;border-bottom:1px solid #ddd;vertical-align:top}.iva{background:#bfdbfe;text-align:center;padding:6px;margin-top:8px;font-weight:700}.terms{margin-top:14px;font-size:10px}.terms h3{margin:6px 0 4px;font-size:11px}.terms .grid{display:grid;grid-template-columns:1fr 1fr;gap:4px}.terms .grid > div{background:#dbeafe;padding:4px}.footer{margin-top:18px;text-align:center;font-style:italic;font-size:11px}@media print{body{margin:12px}}</style></head><body><div class="header">COTIZACION</div><div class="info"><div class="left"><b>IDENTILABEL S.A. DE C.V</b><br>Calle Valle de Iraguadi No. 35. Col. Valle de Aragón 1a. Sección. Nezahualcóyotl, Estado de México, CP 57100. RFC: IDE190827MAA<br><b>Asesor:</b> ${I0.asesor||""} <b>Tel:</b> 55 9125 5900<br><b>Correo:</b> mariana.balderas@identilabel.com.mx</div><div class="right"><b>ID DE COTIZACIÓN:</b><br><span style="font-size:14px"><b>${I0.id_cot||"—"}</b></span><br><b>Fecha:</b> ${today}<br><b>Moneda:</b> ${mon==="USD"?"Dólar Americano":"Peso Mexicano"}<br><span style="font-size:10px">F-COM-01 REV. 00</span></div></div><div class="cliente"><div><b>Cliente:</b> ${I0.cliente||""}</div><div><b>Empresa:</b> ${I0.empresa||""}</div><div><b>Teléfono:</b> ${I0.telefono||""}</div></div><table><thead><tr><th>CANTIDAD</th><th>Unidad</th><th>DESCRIPCIÓN</th><th>PREC. X MILLAR</th><th>IMPORTE</th></tr></thead><tbody>${filas}</tbody></table><div class="iva">LOS PRECIOS NO INCLUYEN IVA</div><div class="terms"><h3>TÉRMINOS Y CONDICIONES DE VENTA:</h3><div class="grid"><div><b>Vigencia:</b> 10 días naturales después de la fecha de emisión.</div><div><b>Entrega:</b> NO incluye gastos de envío.</div><div><b>Pago:</b> ${tMap[I0.terminos]||"50/50"}.</div><div><b>Tiempo de entrega:</b> ${I0.dias_prod} días hábiles tras firma de validación.</div></div><ol style="margin-top:6px"><li>El precio y condiciones aplican para esta cotización; cualquier modificación requiere recotizar.</li><li>En caso de cancelación, el cliente asume los gastos generados (diseño, grabados, suaje, papel, etc.).</li><li>El pedido se empacará en caja o playo según volumen.</li><li>En la producción se puede registrar un 10% +/- respecto a las cantidades requeridas.</li><li>Para aprobar, enviar la Orden de Compra a su asesor comercial.</li></ol></div><div class="footer">"Identilabel, cada etiqueta una historia"<br>www.identilabel.com.mx</div></body></html>`;
@@ -1243,6 +1349,13 @@ function _initLock(){
     else if(e.key === "Enter" && buf.length>=4){ await tryUnlock(); }
   });
   return false;
+}
+
+// Registrar Service Worker para modo offline (PWA)
+if("serviceWorker" in navigator){
+  window.addEventListener("load", ()=>{
+    navigator.serviceWorker.register("./sw.js").catch(()=>{});
+  });
 }
 
 document.addEventListener("DOMContentLoaded", async ()=>{
